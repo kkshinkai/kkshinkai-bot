@@ -1,0 +1,26 @@
+{
+  "name": "kkshinkai-bot",
+  "version": "0.1.0",
+  "description": "Kk Shinkai's telegram bot",
+  "main": "src/bot.js",
+  "author": "Kk Shinkai",
+  "license": "MIT",
+
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node bin/bot.js"
+  },
+
+  "bin": {
+    "shinkai-bot": "./bin/bot.js"
+  },
+
+  "dependencies": {
+    "node-telegram-bot-api": "^0.56.0",
+    "@types/node-telegram-bot-api": "^0.53.6"
+  },
+
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}

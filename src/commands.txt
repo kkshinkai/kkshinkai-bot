@@ -1,0 +1,2 @@
+echo - respond with the same words
+rust - eval Rust codes
