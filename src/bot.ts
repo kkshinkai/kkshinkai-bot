@@ -2,7 +2,7 @@
 process.env.NTBA_FIX_319 = "1";
 
 import TelegramBot from 'node-telegram-bot-api';
-import { runRust } from './rust';
+import rust from './run-rust';
 
 let token = process.env.KKSHINKAI_BOT_TOKEN;
 if (token === undefined) {
@@ -30,16 +30,20 @@ bot.onText(/\/echo( |\n)([\s\S]*)/, (msg, match) => {
   bot.sendMessage(chatId, response);
 });
 
-bot.onText(/\/rust( |\n)([\s\S]*)/, (msg, match) => {
+bot.onText(/\/rust( |\n)([\s\S]*)/, async (msg, match) => {
   let chatId = msg.chat.id;
-  console.log(match[2]);
-  runRust(match[2], output => {
-    bot.sendMessage(chatId, `<pre>${output}</pre>`, { parse_mode: 'HTML' });
-  });
+
+  let code = match[2];
+  await bot.sendChatAction(chatId, "typing");
+  let result = await rust.run(code);
+  let output =
+    result.success === true
+      ? result.stdout
+      : result.stderr.substring(result.stderr.indexOf("\n") + 1);
+
+  let quotedCode =
+    code.split('\n').map(line => `> ${line}`).join('\n') + '\n'
+  let string = `<pre>${quotedCode}</pre><pre>${output}</pre>`;
+
+  bot.sendMessage(chatId, string, { parse_mode: "HTML" });
 });
-
-// bot.onText(/(.+)/, (msg, _) => {
-//   let chatId = msg.chat.id;
-
-//   bot.sendMessage(chatId, "Sorry, I didn't quite get that.");
-// });
